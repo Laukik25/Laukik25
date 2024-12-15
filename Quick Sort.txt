@@ -1,0 +1,60 @@
+# Function to perform partition for Quick Sort
+def partition(arr, low, high):
+    pivot = arr[high]  # Pivot element
+    i = low - 1  # Index of the smaller element
+
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]  # Swap
+
+    # Place pivot element at the correct position
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+# Quick Sort function
+def quick_sort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)  # Partition index
+        quick_sort(arr, low, pi - 1)  # Sort the left part
+        quick_sort(arr, pi + 1, high)  # Sort the right part
+
+# Function to display top five scores
+def display_top_five(arr):
+    if len(arr) < 5:
+        return arr[::-1]  # Reverse entire array if fewer than 5 elements
+    return arr[-5:][::-1]  # Get the last 5 elements in descending order
+
+# Main Program
+def main():
+    try:
+        # Input the number of students
+        num_students = int(input("Enter the number of students: "))
+        
+        if num_students <= 0:
+            print("Number of students must be greater than zero.")
+            return
+
+        # Input student percentages
+        percentages = []
+        for i in range(num_students):
+            percentage = float(input(f"Enter percentage for student {i + 1}: "))
+            if percentage < 0 or percentage > 100:
+                print("Invalid percentage. Please enter a value between 0 and 100.")
+                return
+            percentages.append(percentage)
+        
+        print("\nOriginal Percentages:", percentages)
+
+        # Sort percentages using Quick Sort
+        quick_sort(percentages, 0, len(percentages) - 1)
+        print("Sorted Percentages (Ascending):", percentages)
+
+        # Display top five scores
+        print("Top 5 Scores:", display_top_five(percentages))
+
+    except ValueError:
+        print("Invalid input. Please enter numeric values only.")
+
+if __name__ == "__main__":
+    main()

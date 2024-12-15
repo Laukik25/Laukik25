@@ -1,0 +1,222 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Node structure to store student data
+struct Node {
+    int prn;
+    string name;
+    Node* next;
+
+    // Constructor to initialize Node
+    Node(int p, string n) : prn(p), name(n), next(nullptr) {}
+};
+
+// Singly Linked List class
+class PinnacleClub {
+private:
+    Node* head;  // Head of the list (President)
+    Node* tail;  // Tail of the list (Secretary)
+    
+public:
+    PinnacleClub() : head(nullptr), tail(nullptr) {}
+
+    // Function to add a member
+    void addMember(int prn, string name, bool isPresident = false, bool isSecretary = false) {
+        Node* newNode = new Node(prn, name);
+        if (isPresident) {
+            // Add as President
+            newNode->next = head;
+            head = newNode;
+            if (tail == nullptr) {
+                tail = head; // If list was empty, tail is also the new node
+            }
+        } else if (isSecretary) {
+            // Add as Secretary
+            if (tail) {
+                tail->next = newNode;
+                tail = newNode;
+            } else {
+                // If list was empty, secretary is also the president
+                head = tail = newNode;
+            }
+        } else {
+            // Add as regular member
+            if (head == nullptr || tail == nullptr) {
+                cout << "Add a president and secretary first!" << endl;
+                delete newNode;
+                return;
+            }
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    // Function to delete a member
+    void deleteMember(int prn) {
+        if (!head) {
+            cout << "Club is empty!" << endl;
+            return;
+        }
+
+        Node* current = head;
+        Node* prev = nullptr;
+
+        // Handle deletion of president
+        if (head->prn == prn) {
+            Node* temp = head;
+            head = head->next;
+            if (head == nullptr) {
+                tail = nullptr; // If list becomes empty
+            }
+            delete temp;
+            cout << "President removed!" << endl;
+            return;
+        }
+
+        // Traverse the list to find the member
+        while (current && current->prn != prn) {
+            prev = current;
+            current = current->next;
+        }
+
+        if (current) {
+            // If member found
+            if (current == tail) {
+                // Handle deletion of secretary
+                tail = prev;
+                tail->next = nullptr;
+                cout << "Secretary removed!" << endl;
+            } else {
+                prev->next = current->next;
+                cout << "Member removed!" << endl;
+            }
+            delete current;
+        } else {
+            cout << "Member with PRN " << prn << " not found!" << endl;
+        }
+    }
+
+    // Function to compute total members
+    int countMembers() const {
+        int count = 0;
+        Node* current = head;
+        while (current) {
+            count++;
+            current = current->next;
+        }
+        return count;
+    }
+
+    // Function to display all members
+    void displayMembers() const {
+        if (!head) {
+            cout << "Club has no members!" << endl;
+            return;
+        }
+
+        Node* current = head;
+        cout << "Club Members: " << endl;
+        while (current) {
+            cout << "PRN: " << current->prn << ", Name: " << current->name;
+            if (current == head) cout << " (President)";
+            if (current == tail) cout << " (Secretary)";
+            cout << endl;
+            current = current->next;
+        }
+    }
+
+    // Function to concatenate two lists
+    void concatenate(PinnacleClub& other) {
+        if (!head) {
+            // If current list is empty, make the other list as the current list
+            head = other.head;
+            tail = other.tail;
+        } else if (other.head) {
+            // If both lists are non-empty, concatenate
+            tail->next = other.head;
+            tail = other.tail;
+        }
+        other.head = nullptr; // Clear the other list
+        other.tail = nullptr;
+    }
+};
+
+int main() {
+    PinnacleClub divA, divB;
+    int choice;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Add President\n";
+        cout << "2. Add Secretary\n";
+        cout << "3. Add Member\n";
+        cout << "4. Delete Member\n";
+        cout << "5. Display Members\n";
+        cout << "6. Concatenate Division B into Division A\n";
+        cout << "7. Count Members\n";
+        cout << "8. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            int prn;
+            string name;
+            cout << "Enter PRN of President: ";
+            cin >> prn;
+            cout << "Enter Name of President: ";
+            cin.ignore();
+            getline(cin, name);
+            divA.addMember(prn, name, true, false);
+            break;
+        }
+        case 2: {
+            int prn;
+            string name;
+            cout << "Enter PRN of Secretary: ";
+            cin >> prn;
+            cout << "Enter Name of Secretary: ";
+            cin.ignore();
+            getline(cin, name);
+            divA.addMember(prn, name, false, true);
+            break;
+        }
+        case 3: {
+            int prn;
+            string name;
+            cout << "Enter PRN of Member: ";
+            cin >> prn;
+            cout << "Enter Name of Member: ";
+            cin.ignore();
+            getline(cin, name);
+            divA.addMember(prn, name);
+            break;
+        }
+        case 4: {
+            int prn;
+            cout << "Enter PRN of Member to delete: ";
+            cin >> prn;
+            divA.deleteMember(prn);
+            break;
+        }
+        case 5:
+            divA.displayMembers();
+            break;
+        case 6:
+            cout << "Concatenating Division B into Division A...\n";
+            divA.concatenate(divB);
+            break;
+        case 7:
+            cout << "Total Members in Club: " << divA.countMembers() << endl;
+            break;
+        case 8:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Invalid choice. Try again.\n";
+        }
+    } while (choice != 8);
+
+    return 0;
+}

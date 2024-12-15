@@ -1,0 +1,66 @@
+# File: string_operations.py
+
+def word_with_longest_length(string):
+    """Find and return the word with the longest length."""
+    words = string.split()
+    if not words:
+        return None
+    return max(words, key=len)
+
+
+def frequency_of_character(string, character):
+    """Determine the frequency of occurrence of a character in the string."""
+    return string.count(character)
+
+
+def is_palindrome(string):
+    """Check if the given string is a palindrome."""
+    cleaned_string = ''.join(filter(str.isalnum, string)).lower()  # Remove non-alphanumeric chars, convert to lowercase
+    return cleaned_string == cleaned_string[::-1]
+
+
+def index_of_substring(string, substring):
+    """Display the index of the first occurrence of the substring."""
+    return string.find(substring)
+
+
+def count_word_occurrences(string):
+    """Count the occurrences of each word in the string."""
+    words = string.split()
+    word_count = {}
+    for word in words:
+        word = word.lower()  # Normalize to lowercase for case-insensitive count
+        word_count[word] = word_count.get(word, 0) + 1
+    return word_count
+
+
+# Main function to test the operations
+if __name__ == "__main__":
+    input_string = input("Enter a string: ")
+
+    # a) Word with the longest length
+    longest_word = word_with_longest_length(input_string)
+    print(f"Word with the longest length: {longest_word}")
+
+    # b) Frequency of occurrence of a particular character
+    character = input("Enter a character to find its frequency: ")
+    frequency = frequency_of_character(input_string, character)
+    print(f"Frequency of '{character}' in the string: {frequency}")
+
+    # c) Check if the string is a palindrome
+    palindrome_result = is_palindrome(input_string)
+    print(f"Is the string a palindrome? {'Yes' if palindrome_result else 'No'}")
+
+    # d) Index of the first occurrence of a substring
+    substring = input("Enter a substring to find its index: ")
+    index = index_of_substring(input_string, substring)
+    if index != -1:
+        print(f"The index of the first occurrence of '{substring}': {index}")
+    else:
+        print(f"Substring '{substring}' not found in the string.")
+
+    # e) Count the occurrences of each word in the string
+    word_occurrences = count_word_occurrences(input_string)
+    print("Word occurrences in the string:")
+    for word, count in word_occurrences.items():
+        print(f"'{word}': {count}")

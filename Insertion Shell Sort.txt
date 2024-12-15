@@ -1,0 +1,51 @@
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        # Move elements of arr[0..i-1] that are greater than key
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
+
+
+def shell_sort(arr):
+    n = len(arr)
+    gap = n // 2
+
+    while gap > 0:
+        for i in range(gap, n):
+            temp = arr[i]
+            j = i
+            # Compare elements that are `gap` apart
+            while j >= gap and arr[j - gap] > temp:
+                arr[j] = arr[j - gap]
+                j -= gap
+            arr[j] = temp
+        gap //= 2
+    return arr
+
+
+def display_top_five(scores):
+    print("Top 5 scores:")
+    for score in scores[-1:-6:-1]:  # Reverse iterate through the last five elements
+        print(score)
+
+if __name__ == "__main__":
+    # Input second-year percentages of students
+    n = int(input("Enter the number of students: "))
+    print("Enter the percentages:")
+    percentages = [float(input(f"Student {i+1}: ")) for i in range(n)]
+
+    # a) Insertion Sort
+    print("\nSorting using Insertion Sort...")
+    insertion_sorted = insertion_sort(percentages.copy())
+    print("Sorted percentages (Insertion Sort):", insertion_sorted)
+    display_top_five(insertion_sorted)
+
+    # b) Shell Sort
+    print("\nSorting using Shell Sort...")
+    shell_sorted = shell_sort(percentages.copy())
+    print("Sorted percentages (Shell Sort):", shell_sorted)
+    display_top_five(shell_sorted)

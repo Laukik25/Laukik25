@@ -1,0 +1,66 @@
+# File: student_percentage_sorting.py
+
+def selection_sort(arr):
+    """Sorts an array using the Selection Sort algorithm."""
+    n = len(arr)
+    for i in range(n - 1):
+        # Find the minimum element in unsorted array
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        # Swap the found minimum element with the first element
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+
+def bubble_sort(arr):
+    """Sorts an array using the Bubble Sort algorithm."""
+    n = len(arr)
+    for i in range(n - 1):
+        # Last i elements are already sorted
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                # Swap if the element found is greater than the next element
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+def get_top_five(arr):
+    """Returns the top 5 scores from a sorted array."""
+    return arr[-5:][::-1]  # Reverse the last 5 elements to get the top scores
+
+# Main Program
+def main():
+    try:
+        # Get the number of students
+        num_students = int(input("Enter the number of students: "))
+        
+        if num_students <= 0:
+            print("Number of students must be greater than zero.")
+            return
+        
+        # Input student percentages
+        percentages = []
+        for i in range(num_students):
+            percentage = float(input(f"Enter percentage for student {i + 1}: "))
+            if percentage < 0 or percentage > 100:
+                print("Invalid percentage. Please enter a value between 0 and 100.")
+                return
+            percentages.append(percentage)
+        
+        print("\nOriginal percentages:", percentages)
+        
+        # Sorting using Selection Sort
+        selection_sorted = percentages[:]
+        selection_sort(selection_sorted)
+        print("\nPercentages after Selection Sort:", selection_sorted)
+        print("Top 5 scores using Selection Sort:", get_top_five(selection_sorted))
+        
+        # Sorting using Bubble Sort
+        bubble_sorted = percentages[:]
+        bubble_sort(bubble_sorted)
+        print("\nPercentages after Bubble Sort:", bubble_sorted)
+        print("Top 5 scores using Bubble Sort:", get_top_five(bubble_sorted))
+    
+    except ValueError:
+        print("Invalid input. Please enter numeric values only.")
+
+if __name__ == "__main__":
+    main()

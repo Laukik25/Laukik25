@@ -1,0 +1,41 @@
+# File: saddle_point_finder.py
+
+def find_saddle_point(matrix):
+    if not matrix or not matrix[0]:
+        return None  # Handle empty matrix case
+
+    for i, row in enumerate(matrix):
+        # Find the minimum value in the row and its column index
+        row_min = min(row)
+        col_index = row.index(row_min)
+
+        # Check if the found row minimum is the largest value in its column
+        is_saddle_point = all(row_min >= matrix[k][col_index] for k in range(len(matrix)))
+        if is_saddle_point:
+            return (i, col_index)  # Saddle point found
+
+    return None  # No saddle point found
+
+
+# Main function to test the program
+if __name__ == "__main__":
+    # Input the matrix dimensions
+    m = int(input("Enter the number of rows: "))
+    n = int(input("Enter the number of columns: "))
+
+    # Input the matrix elements
+    print("Enter the elements of the matrix row by row:")
+    matrix = []
+    for i in range(m):
+        row = list(map(int, input(f"Row {i+1}: ").split()))
+        if len(row) != n:
+            print(f"Error: Row {i+1} must have {n} elements.")
+            exit(1)
+        matrix.append(row)
+
+    # Find and display the saddle point
+    result = find_saddle_point(matrix)
+    if result:
+        print(f"Saddle point found at location (row, column): {result}")
+    else:
+        print("No saddle point exists in the matrix.")

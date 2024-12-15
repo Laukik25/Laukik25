@@ -1,0 +1,103 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+// Function to define operator precedence
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+// Function to check if a character is an operator
+bool isOperator(char ch) {
+    return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+}
+
+// Function to convert infix expression to postfix
+string infixToPostfix(const string& infix) {
+    stack<char> s;
+    string postfix;
+
+    for (char ch : infix) {
+        // If the character is an operand, add it to the postfix string
+        if (isalnum(ch)) {
+            postfix += ch;
+        }
+        // If the character is '(', push it to the stack
+        else if (ch == '(') {
+            s.push(ch);
+        }
+        // If the character is ')', pop and add to postfix until '(' is encountered
+        else if (ch == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix += s.top();
+                s.pop();
+            }
+            if (!s.empty() && s.top() == '(') s.pop(); // Remove '('
+        }
+        // If the character is an operator
+        else if (isOperator(ch)) {
+            while (!s.empty() && precedence(s.top()) >= precedence(ch)) {
+                postfix += s.top();
+                s.pop();
+            }
+            s.push(ch);
+        }
+    }
+
+    // Pop all the remaining operators from the stack
+    while (!s.empty()) {
+        postfix += s.top();
+        s.pop();
+    }
+
+    return postfix;
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(const string& postfix) {
+    stack<int> s;
+
+    for (char ch : postfix) {
+        // If the character is an operand, push it to the stack
+        if (isdigit(ch)) {
+            s.push(ch - '0'); // Convert char to int
+        }
+        // If the character is an operator, pop two operands and perform the operation
+        else if (isOperator(ch)) {
+            int op2 = s.top(); s.pop();
+            int op1 = s.top(); s.pop();
+            switch (ch) {
+                case '+': s.push(op1 + op2); break;
+                case '-': s.push(op1 - op2); break;
+                case '*': s.push(op1 * op2); break;
+                case '/': s.push(op1 / op2); break;
+            }
+        }
+    }
+
+    // The result is the only value left in the stack
+    return s.top();
+}
+
+// Main function
+int main() {
+    string infix, postfix;
+
+    cout << "Enter a valid infix expression: ";
+    cin >> infix;
+
+    // Convert infix to postfix
+    postfix = infixToPostfix(infix);
+    cout << "Postfix expression: " << postfix << endl;
+
+    // Evaluate the postfix expression
+    int result = evaluatePostfix(postfix);
+    cout << "Evaluation result: " << result << endl;
+
+    return 0;
+}
